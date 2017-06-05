@@ -1,0 +1,170 @@
+<style type="text/css">
+
+
+
+  #clockdiv{
+    font-family: sans-serif;
+    color: #fff;
+    display: inline-block;
+    font-weight: 100;
+    text-align: center;
+    margin: auto;
+    padding: 2% 0px;
+  }
+
+  #clockdiv > div{
+    border-radius: 3px;
+    background: #353d46;
+    display: inline-block;
+  }
+
+  #clockdiv div > span{
+    padding: 15px;
+    border-radius: 3px;
+    color: #353d46;
+    background: whitesmoke;
+    display: inline-block;
+  }
+
+
+
+.smalltext{
+  padding-top: 5px;
+  font-size: 16px;
+}
+
+  @media (min-width: 414px)
+  {
+
+
+    #top
+    {
+      height: 60vh;
+    }
+    #clockdiv {
+      font-size: 30px;
+    }
+    #clockdiv > div {
+      padding: 10px
+    }
+    section {
+      padding: 10%;
+      border-bottom: 2px solid #dddddd;
+    }
+
+
+
+  }
+
+  @media (max-width: 414px)
+  {
+
+    #top
+    {
+      height: 500px;
+    }
+    #clockdiv {
+      font-size: 20px;
+    }
+    #clockdiv > div {
+      padding: 5px
+    }
+    section {
+      padding: 0%;
+      border-bottom: 2px solid #dddddd;
+    }
+
+  }
+  .row {
+    text-align: center;
+  }
+
+</style>
+
+
+
+  <div class="container-fluid">
+   <div class="row">
+    <div id="clockdiv">
+      <div>
+        <span class="days"></span>
+        <div class="smalltext">Days</div>
+      </div>
+      <div>
+        <span class="hours"></span>
+        <div class="smalltext">Hours</div>
+      </div>
+      <div>
+        <span class="minutes"></span>
+        <div class="smalltext">Minutes</div>
+      </div>
+      <div>
+        <span class="seconds"></span>
+        <div class="smalltext">Seconds</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+
+
+
+function getQueryVariable(variable) {
+  var query = window.location.search.substring(1);
+  var vars = query.split("&");
+  for (var i=0;i<vars.length;i++) {
+    var pair = vars[i].split("=");
+    if (pair[0] == variable) {
+      return pair[1];
+    }
+  }
+  alert('Query Variable ' + variable + ' not found');
+}
+  function getTimeRemaining(endtime) {
+    var t = Date.parse(endtime) - Date.parse(new Date());
+    var seconds = Math.floor((t / 1000) % 60);
+    var minutes = Math.floor((t / 1000 / 60) % 60);
+    var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+    var days = Math.floor(t / (1000 * 60 * 60 * 24));
+    return {
+      'total': t,
+      'days': days,
+      'hours': hours,
+      'minutes': minutes,
+      'seconds': seconds
+    };
+  }
+
+  function initializeClock(id, endtime) {
+    var clock = document.getElementById(id);
+    var daysSpan = clock.querySelector('.days');
+    var hoursSpan = clock.querySelector('.hours');
+    var minutesSpan = clock.querySelector('.minutes');
+    var secondsSpan = clock.querySelector('.seconds');
+
+    function updateClock() {
+      var t = getTimeRemaining(endtime);
+      if(t.days/10<1)
+      daysSpan.innerHTML = '0'+t.days;
+      else
+        daysSpan.innerHTML = t.days;
+      hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
+      minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
+      secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+
+      if (t.total <= 0) {
+        clearInterval(timeinterval);
+      }
+    }
+
+    updateClock();
+    var timeinterval = setInterval(updateClock, 1000);
+  }
+  var time = decodeURIComponent(getQueryVariable("time"));
+  var deadline = new Date(Date.parse(time));
+  initializeClock('clockdiv', deadline);
+</script>
